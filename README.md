@@ -2,7 +2,7 @@
 
 The MxW server is freely available for you to do anything you want with it.  
 You are free to use pre-compiled executable in your project.  
-**If you decide to use/adapt my sources, you MUST to credit me.**
+**If you decide to use/adapt my sources, you MUST credit me.**
 
 ### Informations ###
 
