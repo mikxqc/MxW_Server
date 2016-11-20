@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -10,11 +12,11 @@ namespace mxw_server
 {
     class main
     {
-        internal static string region = "us";
-        internal static string realm = "hyjal";
-        internal static string api = "kx6ytjwqe5t5abjmuxdsymu2a7q2dedg";
+        internal static string region = "";
+        internal static string realm = "";
+        internal static string api = "";
 
-        public static string version = "1.0.1";
+        public static string version = "1.1.0";
         public static string version_type = "beta";
 
         public static bool loop = true;
@@ -23,6 +25,20 @@ namespace mxw_server
         public static int retry = 0;
 
         private static int sleep = 10000;
+
+        public class RootObject
+        {
+            public string region { get; set; }
+            public string realm { get; set; }
+            public string api { get; set; }
+        }
+
+        public class SETTINGS
+        {
+            public string region { get; set; }
+            public string realm { get; set; }
+            public string api { get; set; }
+        }
 
         static void Main(string[] args)
         {
@@ -35,17 +51,35 @@ namespace mxw_server
                         lst = "01";
                         msg.Splash();
                         msg.CM("Cleaning the latest ah dump...", true, 1);
-                        //io.CleanDump();
-                        msg.CM("Checking if worldofwarcraft.com is alive...", true, 1);                
-                        if (!web.CheckWeb("http://worldofwarcraft.com"))
+                        if (File.Exists("settings.json"))
                         {
-                            st = "sleep_error";
+                            if (CheckSettings())
+                            {
+                                msg.CM("Reading the settings...", true, 1);
+                                ReadSettings();
+                                msg.CM(string.Format("Region: {0}", region), true, 2);
+                                msg.CM(string.Format("Realm: {0}", realm), true, 2);
+                                msg.CM(string.Format("API: {0}", api), true, 2);
+                                msg.CM("Checking if worldofwarcraft.com is alive...", true, 1);
+                                if (!web.CheckWeb("http://worldofwarcraft.com"))
+                                {
+                                    st = "sleep_error";
+                                }
+                                else
+                                {
+                                    msg.CM("worldofwarcraft.com is online.", true, 2);
+                                    st = "02";
+                                }
+                            }
+                            else
+                            {
+                                st = "settings_blank_error";
+                            }                            
                         }
                         else
                         {
-                            msg.CM("worldofwarcraft.com is online.", true, 2);
-                            st = "02";
-                        }                       
+                            st = "settings_error";
+                        }                                                             
                         break;
 
                     //STATE 02 | Get latest AH dump url and download it
@@ -83,7 +117,67 @@ namespace mxw_server
                         Thread.Sleep(sleep);
                         st = lst;
                         break;
+
+                    //STATE SETTINGS_ERROR | No settings.json found. Downloading a blank one.
+                    case "settings_error":
+                        msg.CM("No settings.json found. Creating a blank one...", true, 3);
+                        CreateSettings();
+                        msg.CM("Edit the blank settings.json and run the server again.", true, 3);
+                        msg.CM("Press any key to exit...", true, 1);
+                        Console.ReadKey();
+                        loop = false;
+                        break;
+
+                    //STATE SETTINGS_BLANK_ERROR | Blank settings.json found.
+                    case "settings_blank_error":
+                        msg.CM("Blank settings.json found. Fill it before executing the server.", true, 3);
+                        msg.CM("Edit the blank settings.json and run the server again.", true, 3);
+                        msg.CM("Press any key to exit...", true, 1);
+                        Console.ReadKey();
+                        loop = false;
+                        break;
                 }
+            }
+        }
+
+        private static void ReadSettings()
+        {
+            RootObject j = JsonConvert.DeserializeObject<RootObject>(File.ReadAllText("settings.json"));
+            region = j.region;
+            realm = j.realm;
+            api = j.api;
+        }
+
+        private static bool CheckSettings()
+        {
+            RootObject j = JsonConvert.DeserializeObject<RootObject>(File.ReadAllText("settings.json"));
+
+            if (j.region == "fill me")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private static void CreateSettings()
+        {
+            SETTINGS sjson = new SETTINGS()
+            {
+                region = "fill me",
+                realm = "fill me",
+                api = "fill me"
+            };
+
+            using (FileStream fs = File.Open("settings.json", FileMode.CreateNew))
+            using (StreamWriter sw = new StreamWriter(fs))
+            using (JsonWriter jw = new JsonTextWriter(sw))
+            {
+                jw.Formatting = Formatting.Indented;
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(jw, sjson);
             }
         }
     }

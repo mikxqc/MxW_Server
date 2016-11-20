@@ -35,6 +35,14 @@ namespace mxw_server
             }
         }
 
+        public static void CheckRealms()
+        {
+            if (!Directory.Exists("realms"))
+            {
+                Directory.CreateDirectory("realms");
+            }
+        }
+
         public static void ClearUID()
         {
             DirectoryInfo di = new DirectoryInfo(@"uid");
