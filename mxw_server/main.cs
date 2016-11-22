@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,8 +19,10 @@ namespace mxw_server
         internal static string api = "";
         internal static string locale = "";
 
-        public static string version = "1.2.0";
-        public static string version_type = "beta";
+        public static string version = "1.3.0";
+        public static string version_type = "exp";
+        public static string build = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileBuildPart.ToString();
+        public static string commit = ThisAssembly.Git.Commit;
 
         public static bool loop = true;
         public static string st = "01";
@@ -174,7 +178,7 @@ namespace mxw_server
                 region = "fill me",
                 realm = "fill me",
                 api = "fill me",
-                lang = "fill me"
+                locale = "fill me"
             };
 
             using (FileStream fs = File.Open("settings.json", FileMode.CreateNew))

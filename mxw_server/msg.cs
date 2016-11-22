@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -89,7 +91,7 @@ namespace mxw_server
             Console.WriteLine(@" | |\/| \ \/ /\ \ /\ / / __|");
             Console.WriteLine(@" | |  | |>  <  \ V  V /\__ \");
             Console.WriteLine(@" |_|  |_/_/\_\  \_/\_/ |___/");
-            Console.WriteLine(String.Format("  MxW Server {0}-{1}", main.version, main.version_type));
+            Console.WriteLine(String.Format("  MxW Server {0}({1}) (Build {2}) (Rev. {3})", main.version, main.version_type, main.build, main.commit));
             Console.WriteLine("");
             Console.ForegroundColor = ConsoleColor.White;
         }
