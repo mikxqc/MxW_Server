@@ -15,8 +15,9 @@ namespace mxw_server
         internal static string region = "";
         internal static string realm = "";
         internal static string api = "";
+        internal static string locale = "";
 
-        public static string version = "1.1.0";
+        public static string version = "1.2.0";
         public static string version_type = "beta";
 
         public static bool loop = true;
@@ -31,6 +32,7 @@ namespace mxw_server
             public string region { get; set; }
             public string realm { get; set; }
             public string api { get; set; }
+            public string locale { get; set; }
         }
 
         public class SETTINGS
@@ -38,6 +40,7 @@ namespace mxw_server
             public string region { get; set; }
             public string realm { get; set; }
             public string api { get; set; }
+            public string locale { get; set; }
         }
 
         static void Main(string[] args)
@@ -60,6 +63,7 @@ namespace mxw_server
                                 msg.CM(string.Format("Region: {0}", region), true, 2);
                                 msg.CM(string.Format("Realm: {0}", realm), true, 2);
                                 msg.CM(string.Format("API: {0}", api), true, 2);
+                                msg.CM(string.Format("Locale: {0}", locale), true, 2);
                                 msg.CM("Checking if worldofwarcraft.com is alive...", true, 1);
                                 if (!web.CheckWeb("http://worldofwarcraft.com"))
                                 {
@@ -146,6 +150,7 @@ namespace mxw_server
             region = j.region;
             realm = j.realm;
             api = j.api;
+            locale = j.locale;
         }
 
         private static bool CheckSettings()
@@ -168,7 +173,8 @@ namespace mxw_server
             {
                 region = "fill me",
                 realm = "fill me",
-                api = "fill me"
+                api = "fill me",
+                lang = "fill me"
             };
 
             using (FileStream fs = File.Open("settings.json", FileMode.CreateNew))

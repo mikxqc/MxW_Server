@@ -57,7 +57,7 @@ namespace mxw_server
                         try
                         {
                             WebClient wc = new WebClient();
-                            Uri uri = new Uri(String.Format(@"https://eu.api.battle.net/wow/item/{0}?locale=fr_FR&apikey={1}", i, api));
+                            Uri uri = new Uri(String.Format(@"https://eu.api.battle.net/wow/item/{0}?locale={1}&apikey={2}", i, main.locale, api));
                             wc.DownloadFile(uri, string.Format(@"items/{0}.json", i));
                             //msg.CM(string.Format("Saved new item {0}...", i), true, 2);
                         }
