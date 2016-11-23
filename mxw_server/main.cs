@@ -23,6 +23,7 @@ namespace mxw_server
         public static string version_type = "exp";
         public static string build = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileBuildPart.ToString();
         public static string commit = ThisAssembly.Git.Commit;
+        public static string branch = ThisAssembly.Git.Branch;
 
         public static bool loop = true;
         public static string st = "01";
@@ -77,6 +78,7 @@ namespace mxw_server
                                 {
                                     msg.CM("worldofwarcraft.com is online.", true, 2);
                                     st = "02";
+                                    //Console.ReadKey();
                                 }
                             }
                             else

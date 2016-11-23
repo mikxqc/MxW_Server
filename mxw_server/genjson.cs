@@ -30,6 +30,19 @@ namespace mxw_server
             public Int64 mic { get; set; }
         }
 
+        public class LIST
+        {
+            public string owner { get; set; }
+            public int qty { get; set; }
+            public int tg { get; set; }
+            public int ts { get; set; }
+            public int tc { get; set; }
+            public int ug { get; set; }
+            public int us { get; set; }
+            public int uc { get; set; }
+            public string time { get; set; }
+        }
+
         public class RootObject
         {
             public List<ITEMS> items { get; set; }
@@ -105,13 +118,32 @@ namespace mxw_server
                         mic = mic
                     };
 
-                    using (FileStream fs = File.Open(string.Format(@"uid/{0}.json", i), FileMode.CreateNew))
+                    var data = new List<LIST>();
+
+                    DataRow[] result = genuid.aucds.Tables["auclist"].Select("item ='" + i + "'");
+                    foreach (DataRow row in result)
+                    {
+                        data.Add(new LIST {
+                            owner = row["owner"].ToString(),
+                            qty = Convert.ToInt32(row["qty"]),
+                            tg = Convert.ToInt32(row["agold"]),
+                            ts = Convert.ToInt32(row["asilver"]),
+                            tc = Convert.ToInt32(row["acopper"]),
+                            ug = Convert.ToInt32(row["ugold"]),
+                            us = Convert.ToInt32(row["usilver"]),
+                            uc = Convert.ToInt32(row["ucopper"]),
+                            time = (row["time"].ToString())
+                        });
+                    }
+
+                    using (FileStream fs = File.Open(string.Format(@"uid/{0}.json", i), FileMode.Append))
                     using (StreamWriter sw = new StreamWriter(fs))
                     using (JsonWriter jw = new JsonTextWriter(sw))
                     {
                         jw.Formatting = Formatting.Indented;
                         JsonSerializer serializer = new JsonSerializer();
                         serializer.Serialize(jw, ijson);
+                        serializer.Serialize(jw, data);
                     }
                 }
             }
