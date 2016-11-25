@@ -28,6 +28,20 @@ namespace mxw_server
             public Int64 avc { get; set; }
             public Int64 mac { get; set; }
             public Int64 mic { get; set; }
+            public List<LIST> list { get; set; }
+        }
+
+        public class LIST
+        {
+            public string owner { get; set; }
+            public int qty { get; set; }
+            public int tg { get; set; }
+            public int ts { get; set; }
+            public int tc { get; set; }
+            public int ug { get; set; }
+            public int us { get; set; }
+            public int uc { get; set; }
+            public string time { get; set; }
         }
 
         public class RootObject
@@ -85,7 +99,25 @@ namespace mxw_server
                     int qty = genuid.aucds.Tables["auclist"].Select(string.Format("item = '{0}'", i)).Length;
 
                     string name = getitems.GetName(i);
-                    string icon = getitems.GetIcon(i);
+                    string icon = getitems.GetIcon(i);                  
+
+                    var data = new List<LIST>();
+
+                    DataRow[] result = genuid.aucds.Tables["auclist"].Select("item ='" + i + "'");
+                    foreach (DataRow row in result)
+                    {
+                        data.Add(new LIST {
+                            owner = row["owner"].ToString(),
+                            qty = Convert.ToInt32(row["qty"]),
+                            tg = Convert.ToInt32(row["agold"]),
+                            ts = Convert.ToInt32(row["asilver"]),
+                            tc = Convert.ToInt32(row["acopper"]),
+                            ug = Convert.ToInt32(row["ugold"]),
+                            us = Convert.ToInt32(row["usilver"]),
+                            uc = Convert.ToInt32(row["ucopper"]),
+                            time = (row["time"].ToString())
+                        });
+                    }
 
                     //Gen unique item json
                     ITEMS ijson = new ITEMS()
@@ -102,10 +134,11 @@ namespace mxw_server
                         mis = mis,
                         avc = avc,
                         mac = mac,
-                        mic = mic
+                        mic = mic,
+                        list = data
                     };
 
-                    using (FileStream fs = File.Open(string.Format(@"uid/{0}.json", i), FileMode.CreateNew))
+                    using (FileStream fs = File.Open(string.Format(@"uid/{0}.json", i), FileMode.Append))
                     using (StreamWriter sw = new StreamWriter(fs))
                     using (JsonWriter jw = new JsonTextWriter(sw))
                     {
