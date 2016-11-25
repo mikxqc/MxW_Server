@@ -28,6 +28,7 @@ namespace mxw_server
             public Int64 avc { get; set; }
             public Int64 mac { get; set; }
             public Int64 mic { get; set; }
+            public List<LIST> list { get; set; }
         }
 
         public class LIST
@@ -98,25 +99,7 @@ namespace mxw_server
                     int qty = genuid.aucds.Tables["auclist"].Select(string.Format("item = '{0}'", i)).Length;
 
                     string name = getitems.GetName(i);
-                    string icon = getitems.GetIcon(i);
-
-                    //Gen unique item json
-                    ITEMS ijson = new ITEMS()
-                    {
-                        item = i,
-                        name = name,
-                        icon = icon,
-                        qty = qty,
-                        avg = avg,
-                        mag = mag,
-                        mig = mig,
-                        avs = avs,
-                        mas = mas,
-                        mis = mis,
-                        avc = avc,
-                        mac = mac,
-                        mic = mic
-                    };
+                    string icon = getitems.GetIcon(i);                  
 
                     var data = new List<LIST>();
 
@@ -136,6 +119,25 @@ namespace mxw_server
                         });
                     }
 
+                    //Gen unique item json
+                    ITEMS ijson = new ITEMS()
+                    {
+                        item = i,
+                        name = name,
+                        icon = icon,
+                        qty = qty,
+                        avg = avg,
+                        mag = mag,
+                        mig = mig,
+                        avs = avs,
+                        mas = mas,
+                        mis = mis,
+                        avc = avc,
+                        mac = mac,
+                        mic = mic,
+                        list = data
+                    };
+
                     using (FileStream fs = File.Open(string.Format(@"uid/{0}.json", i), FileMode.Append))
                     using (StreamWriter sw = new StreamWriter(fs))
                     using (JsonWriter jw = new JsonTextWriter(sw))
@@ -143,7 +145,6 @@ namespace mxw_server
                         jw.Formatting = Formatting.Indented;
                         JsonSerializer serializer = new JsonSerializer();
                         serializer.Serialize(jw, ijson);
-                        serializer.Serialize(jw, data);
                     }
                 }
             }

@@ -91,7 +91,7 @@ namespace mxw_server
             Console.WriteLine(@" | |\/| \ \/ /\ \ /\ / / __|");
             Console.WriteLine(@" | |  | |>  <  \ V  V /\__ \");
             Console.WriteLine(@" |_|  |_/_/\_\  \_/\_/ |___/");
-            Console.WriteLine(String.Format("  MxW Server {0}[Build {1}][Git {2}][Branch {3}]", main.version, main.build, main.commit, main.branch));
+            Console.WriteLine(String.Format("  MxW Server {0}.{1}-{2}({3})", main.version, main.build, main.commit, main.branch));
             Console.WriteLine("");
             Console.ForegroundColor = ConsoleColor.White;
         }
