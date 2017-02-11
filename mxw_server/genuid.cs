@@ -50,7 +50,7 @@ namespace mxw_server
 
         public static void GenUID()
         {
-            DataSet ds = JsonConvert.DeserializeObject<DataSet>(File.ReadAllText(io.ahdump));
+            DataSet ds = JsonConvert.DeserializeObject<DataSet>(File.ReadAllText(main.ahdump));
             DataTable table = ds.Tables["auctions"];
 
             DataTable auctb = new DataTable("auclist");

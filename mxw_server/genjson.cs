@@ -138,7 +138,7 @@ namespace mxw_server
                         list = data
                     };
 
-                    using (FileStream fs = File.Open(string.Format(@"uid/{0}.json", i), FileMode.Append))
+                    using (FileStream fs = File.Open(string.Format(@"{0}/{1}.json", main.genpath, i), FileMode.Append))
                     using (StreamWriter sw = new StreamWriter(fs))
                     using (JsonWriter jw = new JsonTextWriter(sw))
                     {

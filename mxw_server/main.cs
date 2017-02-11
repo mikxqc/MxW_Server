@@ -18,15 +18,16 @@ namespace mxw_server
         internal static string realm = "";
         internal static string api = "";
         internal static string locale = "";
+        internal static string genpath = "";
+        internal static string ahdump = "";
 
-        public static string version = "1.3.0";
-        public static string version_type = "exp";
+        public static string version = "1.4.0";
         public static string build = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileBuildPart.ToString();
         public static string commit = ThisAssembly.Git.Commit;
         public static string branch = ThisAssembly.Git.Branch;
 
         public static bool loop = true;
-        public static string st = "01";
+        public static string st = "00";
         public static string lst = "";
         public static int retry = 0;
 
@@ -55,9 +56,36 @@ namespace mxw_server
                 switch(st)
                 {
                     //STATE 01 | Clean up and init the basic stuff
-                    case "01":
-                        lst = "01";
+                    case "00":
                         msg.Splash();
+                        if (args.Length > 0)
+                        {
+                            if (args[0] != "" && args[1] != "")
+                            {
+                                region = args[0];
+                                realm = args[1];
+                                st = "01";
+                            }
+                            else
+                            {
+                                msg.CM("Usage: mxw_server.exe {region} {realm}", true, 3);
+                                msg.CM("Exemple: mxw_server.exe us hyjal", true, 3);
+                                msg.CM("Press any key to exit...", true, 1);
+                                Console.ReadKey();
+                                loop = false;
+                            }
+                        }
+                        else
+                        {
+                            msg.CM("Usage: mxw_server.exe {region} {realm}", true, 3);
+                            msg.CM("Exemple: mxw_server.exe us hyjal", true, 3);
+                            msg.CM("Press any key to exit...", true, 1);
+                            Console.ReadKey();
+                            loop = false;
+                        }                  
+                        break;
+                    case "01":
+                        lst = "01";                       
                         msg.CM("Cleaning the latest ah dump...", true, 1);
                         if (File.Exists("settings.json"))
                         {
@@ -101,7 +129,7 @@ namespace mxw_server
                         msg.CM("Downloading the latest AH dump from BNet...", true, 1);
                         using (WebClient wc = new WebClient())
                         {
-                            wc.DownloadFile(jsonurl, io.ahdump);
+                            wc.DownloadFile(jsonurl, ahdump);
                         }
                         st = "03";
                         break;
@@ -153,17 +181,17 @@ namespace mxw_server
         private static void ReadSettings()
         {
             RootObject j = JsonConvert.DeserializeObject<RootObject>(File.ReadAllText("settings.json"));
-            region = j.region;
-            realm = j.realm;
             api = j.api;
             locale = j.locale;
+            genpath = string.Format("{0}-{1}", region, realm);
+            ahdump = string.Format("{0}-{1}_dump.json", main.region, main.realm);
         }
 
         private static bool CheckSettings()
         {
             RootObject j = JsonConvert.DeserializeObject<RootObject>(File.ReadAllText("settings.json"));
 
-            if (j.region == "fill me")
+            if (j.api == "fill me")
             {
                 return false;
             }
@@ -177,8 +205,6 @@ namespace mxw_server
         {
             SETTINGS sjson = new SETTINGS()
             {
-                region = "fill me",
-                realm = "fill me",
                 api = "fill me",
                 locale = "fill me"
             };

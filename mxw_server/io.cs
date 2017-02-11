@@ -9,21 +9,20 @@ namespace mxw_server
 {
     class io
     {
-        public static string ahdump = "ah-dump.json";
 
         public static void CleanDump()
         {
-            if (File.Exists(ahdump))
+            if (File.Exists(main.ahdump))
             {
-                File.Delete(ahdump);
+                File.Delete(main.ahdump);
             }
         }
 
         public static void CheckUID()
         {
-            if (!Directory.Exists("uid"))
+            if (!Directory.Exists(main.genpath))
             {
-                Directory.CreateDirectory("uid");
+                Directory.CreateDirectory(main.genpath);
             }
         }
 
@@ -45,7 +44,7 @@ namespace mxw_server
 
         public static void ClearUID()
         {
-            DirectoryInfo di = new DirectoryInfo(@"uid");
+            DirectoryInfo di = new DirectoryInfo(main.genpath);
             FileInfo[] files = di.GetFiles("*.json")
                                  .Where(p => p.Extension == ".json").ToArray();
             foreach (FileInfo file in files)
