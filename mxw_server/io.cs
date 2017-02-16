@@ -34,11 +34,11 @@ namespace mxw_server
             }
         }
 
-        public static void CheckRealms()
+        public static void CheckToken()
         {
-            if (!Directory.Exists("realms"))
+            if (!Directory.Exists("token"))
             {
-                Directory.CreateDirectory("realms");
+                Directory.CreateDirectory("token");
             }
         }
 

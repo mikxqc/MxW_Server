@@ -20,8 +20,9 @@ namespace mxw_server
         internal static string locale = "";
         internal static string genpath = "";
         internal static string ahdump = "";
+        internal static string tokendump = "";
 
-        public static string version = "1.4.0";
+        public static string version = "1.6.0";
         public static string build = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileBuildPart.ToString();
         public static string commit = ThisAssembly.Git.Commit;
         public static string branch = ThisAssembly.Git.Branch;
@@ -97,7 +98,7 @@ namespace mxw_server
                                 msg.CM(string.Format("Realm: {0}", realm), true, 2);
                                 msg.CM(string.Format("API: {0}", api), true, 2);
                                 msg.CM(string.Format("Locale: {0}", locale), true, 2);
-                                msg.CM("Checking if worldofwarcraft.com is alive...", true, 1);
+                                msg.CM("Checking if worldofwarcraft.com is online...", true, 1);
                                 if (!web.CheckWeb("http://worldofwarcraft.com"))
                                 {
                                     st = "sleep_error";
@@ -130,6 +131,7 @@ namespace mxw_server
                         using (WebClient wc = new WebClient())
                         {
                             wc.DownloadFile(jsonurl, ahdump);
+                            wc.DownloadFile("https://wowtoken.info/snapshot.json", "token.json");
                         }
                         st = "03";
                         break;

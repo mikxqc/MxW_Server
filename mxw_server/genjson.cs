@@ -28,6 +28,7 @@ namespace mxw_server
             public Int64 avc { get; set; }
             public Int64 mac { get; set; }
             public Int64 mic { get; set; }
+            public string gentime { get; set; }
             public List<LIST> list { get; set; }
         }
 
@@ -119,6 +120,56 @@ namespace mxw_server
                         });
                     }
 
+                    string days = "";
+                    string months = "";
+                    string seconds = "";
+                    string minutes = "";
+                    string hours = "";
+                    if (DateTime.Now.Day < 10)
+                    {
+                        days = String.Format("0{0}", DateTime.Now.Day);
+                    }
+                    else
+                    {
+                        days = DateTime.Now.Day.ToString();
+                    }
+                    if (DateTime.Now.Month < 10)
+                    {
+                        months = String.Format("0{0}", DateTime.Now.Month);
+                    }
+                    else
+                    {
+                        months = DateTime.Now.Month.ToString();
+                    }
+                    if (DateTime.Now.Second < 10)
+                    {
+                        seconds = String.Format("0{0}", DateTime.Now.Second);
+                    }
+                    else
+                    {
+                        seconds = DateTime.Now.Second.ToString();
+                    }
+
+                    if (DateTime.Now.Minute < 10)
+                    {
+                        minutes = String.Format("0{0}", DateTime.Now.Minute);
+                    }
+                    else
+                    {
+                        minutes = DateTime.Now.Minute.ToString();
+                    }
+
+                    if (DateTime.Now.Hour < 10)
+                    {
+                        hours = String.Format("0{0}", DateTime.Now.Hour);
+                    }
+                    else
+                    {
+                        hours = DateTime.Now.Hour.ToString();
+                    }
+
+                    string gentime = string.Format("{0}/{1}/{2} {3}:{4}:{5}", days, months, DateTime.Now.Year, hours, minutes, seconds);
+
                     //Gen unique item json
                     ITEMS ijson = new ITEMS()
                     {
@@ -135,7 +186,8 @@ namespace mxw_server
                         avc = avc,
                         mac = mac,
                         mic = mic,
-                        list = data
+                        list = data,
+                        gentime = gentime
                     };
 
                     using (FileStream fs = File.Open(string.Format(@"{0}/{1}.json", main.genpath, i), FileMode.Append))
